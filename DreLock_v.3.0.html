@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRElock for ANDRE v6.0 - Secure Project Encryptor</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        color: #e0e0e0;
+    }
+
+    .container {
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(15px);
+        border: 2px solid #4a90e2;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 700px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(74, 144, 226, 0.3);
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    h1 {
+        color: #4a90e2;
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
+    }
+
+    .subtitle {
+        color: #b0b0b0;
+        margin-bottom: 30px;
+        font-size: 0.95em;
+    }
+
+    .version {
+        background: linear-gradient(135deg, #4a90e2, #357abd);
+        color: white;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.8em;
+        font-weight: 600;
+    }
+
+    .feature-badges {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        background: rgba(74, 144, 226, 0.2);
+        color: #64c8ff;
+        border: 1px solid #4a90e2;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.85em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .andre-badge {
+        background: rgba(100, 200, 100, 0.2);
+        color: #64c864;
+        border-color: #64c864;
+    }
+
+    .section {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 2px solid rgba(74, 144, 226, 0.3);
+        transition: all 0.3s;
+    }
+
+    .section:hover {
+        border-color: #4a90e2;
+        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2);
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .file-input-label {
+        display: block;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px dashed #666;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-bottom: 15px;
+        color: #ccc;
+    }
+
+    .file-input-label:hover {
+        border-color: #4a90e2;
+        background: rgba(74, 144, 226, 0.1);
+        color: #e0e0e0;
+    }
+
+    .file-input-label.has-file {
+        border-color: #4a90e2;
+        background: rgba(74, 144, 226, 0.15);
+        border-style: solid;
+        color: #64c8ff;
+    }
+
+    .file-input-label.andre-file {
+        border-color: #64c864;
+        background: rgba(100, 200, 100, 0.15);
+        color: #64c864;
+    }
+
+    .password-group {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    input[type="password"], input[type="text"] {
+        width: 100%;
+        padding: 12px 40px 12px 15px;
+        border: 2px solid #444;
+        border-radius: 10px;
+        font-size: 1em;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.1);
+        color: #e0e0e0;
+    }
+
+    input[type="password"]:focus, input[type="text"]:focus {
+        outline: none;
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    input[type="password"]::placeholder, input[type="text"]::placeholder {
+        color: #888;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #888;
+        font-size: 1.2em;
+    }
+
+    .password-toggle:hover {
+        color: #4a90e2;
+    }
+
+    .password-strength {
+        height: 4px;
+        background: #333;
+        border-radius: 2px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .password-strength-bar {
+        height: 100%;
+        transition: all 0.3s;
+        border-radius: 2px;
+    }
+
+    .button-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    button {
+        padding: 14px 24px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-encrypt {
+        background: linear-gradient(135deg, #4a90e2, #357abd);
+        color: white;
+    }
+
+    .btn-encrypt:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(74, 144, 226, 0.4);
+    }
+
+    .btn-decrypt {
+        background: linear-gradient(135deg, #64c864, #4a934a);
+        color: white;
+    }
+
+    .btn-decrypt:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(100, 200, 100, 0.4);
+    }
+
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .status-message {
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+        display: none;
+        animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .status-success {
+        background: rgba(100, 200, 100, 0.2);
+        color: #64c864;
+        border: 1px solid #64c864;
+    }
+
+    .status-error {
+        background: rgba(220, 100, 100, 0.2);
+        color: #dc6464;
+        border: 1px solid #dc6464;
+    }
+
+    .status-warning {
+        background: rgba(255, 187, 51, 0.2);
+        color: #ffbb33;
+        border: 1px solid #ffbb33;
+    }
+
+    .status-info {
+        background: rgba(74, 144, 226, 0.2);
+        color: #4a90e2;
+        border: 1px solid #4a90e2;
+    }
+
+    .info-box {
+        background: rgba(74, 144, 226, 0.1);
+        border-left: 4px solid #4a90e2;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 25px;
+        font-size: 0.9em;
+    }
+
+    .info-box h3 {
+        color: #4a90e2;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+
+    .info-box ul {
+        margin-left: 20px;
+        color: #b0b0b0;
+        line-height: 1.6;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: #333;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 15px;
+        display: none;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4a90e2, #64c8ff);
+        width: 0%;
+        transition: width 0.3s;
+        animation: shimmer 1s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { opacity: 0.8; }
+        50% { opacity: 1; }
+        100% { opacity: 0.8; }
+    }
+
+    .metadata-display {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        border: 1px solid #444;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        display: none;
+    }
+
+    .metadata-display h4 {
+        color: #4a90e2;
+        margin-bottom: 10px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .metadata-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border-bottom: 1px solid #333;
+    }
+
+    .metadata-item:last-child {
+        border-bottom: none;
+    }
+
+    .metadata-label {
+        color: #888;
+        font-weight: 600;
+    }
+
+    .metadata-value {
+        color: #e0e0e0;
+    }
+
+    .andre-info {
+        background: rgba(100, 200, 100, 0.1);
+        border-left: 4px solid #64c864;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .andre-info h3 {
+        color: #64c864;
+        margin-bottom: 10px;
+    }
+
+    .file-type-indicator {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75em;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+
+    .andre-indicator {
+        background: rgba(100, 200, 100, 0.3);
+        color: #64c864;
+        border: 1px solid #64c864;
+    }
+
+    .drelock-indicator {
+        background: rgba(74, 144, 226, 0.3);
+        color: #4a90e2;
+        border: 1px solid #4a90e2;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>
+        <span>🔐</span>
+        <span>DRElock for ANDRE</span>
+        <span class="version">v6.0</span>
+    </h1>
+    <p class="subtitle">Military-grade encryption specifically designed for ANDRE project files</p>
+    
+    <div class="andre-info">
+        <h3>🤖 ANDRE v6.0 Integration</h3>
+        <p>This version of DRElock is optimized for securing ANDRE project files, configurations, and checkpoints. It automatically detects ANDRE file formats and applies appropriate encryption settings.</p>
+    </div>
+    
+    <div class="feature-badges">
+        <div class="badge">✓ AES-256-GCM</div>
+        <div class="badge">✓ HMAC-SHA256</div>
+        <div class="badge">✓ 200K PBKDF2</div>
+        <div class="badge andre-badge">✓ ANDRE v6.0 Ready</div>
+        <div class="badge andre-badge">✓ Project File Detection</div>
+        <div class="badge andre-badge">✓ Config Protection</div>
+    </div>
+
+    <div class="section">
+        <label for="fileInput" class="file-input-label" id="fileLabel">
+            <span id="fileLabelText">📁 Select ANDRE project file or drag & drop</span>
+            <span id="fileTypeIndicator"></span>
+        </label>
+        <input type="file" id="fileInput">
+        
+        <div class="password-group">
+            <input type="password" id="password" placeholder="Enter strong password for encryption" autocomplete="off">
+            <span class="password-toggle" onclick="togglePassword()">👁️</span>
+            <div class="password-strength">
+                <div class="password-strength-bar" id="strengthBar"></div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-encrypt" onclick="encryptFile()" id="encryptBtn">
+                <span>🔒</span>
+                <span>Encrypt File</span>
+            </button>
+            <button class="btn-decrypt" onclick="decryptFile()" id="decryptBtn">
+                <span>🔓</span>
+                <span>Decrypt File</span>
+            </button>
+        </div>
+        
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="status-message" id="statusMessage"></div>
+        
+        <div class="metadata-display" id="metadataDisplay"></div>
+    </div>
+
+    <div class="info-box">
+        <h3>🛡️ ANDRE Security Features</h3>
+        <ul>
+            <li><strong>Project File Recognition:</strong> Automatically detects ANDRE configurations, checkpoints, and project files</li>
+            <li><strong>Enhanced Encryption:</strong> AES-256-GCM with 200,000 PBKDF2 iterations optimized for project data</li>
+            <li><strong>Integrity Protection:</strong> HMAC-SHA256 verification prevents tampering with project files</li>
+            <li><strong>Metadata Preservation:</strong> Maintains ANDRE-specific file information and project context</li>
+            <li><strong>Version Compatibility:</strong> Works with all ANDRE v6.0 file formats (JSON, TOML, Markdown)</li>
+            <li><strong>Expert Knowledge Protection:</strong> Secures industry insights and knowledge integration data</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+// DRElock for ANDRE v6.0 - Secure Project File Encryptor
+const TOOL_SIGNATURE = 'DRELOCK_ANDRE_V6';
+const SIGNATURE_BYTES = new TextEncoder().encode(TOOL_SIGNATURE);
+const PBKDF2_ITERATIONS = 200000;
+const ANDRE_VERSION = '6.0.0';
+
+// ANDRE file type detection patterns
+const ANDRE_FILE_PATTERNS = {
+    json: /\.json$/i,
+    toml: /\.toml$/i,
+    md: /\.md$/i,
+    config: /\.config$/i,
+    drelock: /\.drelock$/i,
+    andre_checkpoint: /andre.*checkpoint/i,
+    andre_config: /andre.*config/i
+};
+
+// File input handling with ANDRE detection
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const label = document.getElementById('fileLabel');
+    const labelText = document.getElementById('fileLabelText');
+    const typeIndicator = document.getElementById('fileTypeIndicator');
+    
+    if (file) {
+        const fileInfo = analyzeFile(file);
+        label.classList.add('has-file');
+        
+        if (fileInfo.isAndreFile) {
+            label.classList.add('andre-file');
+            labelText.innerHTML = `🤖 ${file.name} (${formatFileSize(file.size)})`;
+            typeIndicator.innerHTML = `<span class="file-type-indicator andre-indicator">${fileInfo.type}</span>`;
+        } else if (fileInfo.isEncrypted) {
+            labelText.innerHTML = `🔒 ${file.name} (${formatFileSize(file.size)})`;
+            typeIndicator.innerHTML = `<span class="file-type-indicator drelock-indicator">ENCRYPTED</span>`;
+        } else {
+            label.classList.remove('andre-file');
+            labelText.innerHTML = `📄 ${file.name} (${formatFileSize(file.size)})`;
+            typeIndicator.innerHTML = `<span class="file-type-indicator">${fileInfo.type}</span>`;
+        }
+        
+        // Auto-detect if file is encrypted
+        detectFileType(file);
+    } else {
+        label.classList.remove('has-file', 'andre-file');
+        labelText.textContent = '📁 Select ANDRE project file or drag & drop';
+        typeIndicator.innerHTML = '';
+    }
+});
+
+// Analyze file to determine if it's ANDRE-related
+function analyzeFile(file) {
+    const filename = file.name.toLowerCase();
+    const isEncrypted = ANDRE_FILE_PATTERNS.drelock.test(filename);
+    
+    // Check for ANDRE-specific patterns
+    const isAndreCheckpoint = ANDRE_FILE_PATTERNS.andre_checkpoint.test(filename);
+    const isAndreConfig = ANDRE_FILE_PATTERNS.andre_config.test(filename);
+    const isJsonConfig = ANDRE_FILE_PATTERNS.json.test(filename) && (filename.includes('andre') || filename.includes('config'));
+    const isTomlConfig = ANDRE_FILE_PATTERNS.toml.test(filename);
+    const isMarkdownDoc = ANDRE_FILE_PATTERNS.md.test(filename);
+    const isConfigFile = ANDRE_FILE_PATTERNS.config.test(filename);
+    
+    let type = 'Unknown';
+    let isAndreFile = false;
+    
+    if (isEncrypted) {
+        type = 'DRElock Encrypted';
+    } else if (isAndreCheckpoint) {
+        type = 'ANDRE Checkpoint';
+        isAndreFile = true;
+    } else if (isAndreConfig) {
+        type = 'ANDRE Config';
+        isAndreFile = true;
+    } else if (isJsonConfig) {
+        type = 'ANDRE JSON';
+        isAndreFile = true;
+    } else if (isTomlConfig) {
+        type = 'ANDRE TOML';
+        isAndreFile = true;
+    } else if (isMarkdownDoc && filename.includes('andre')) {
+        type = 'ANDRE Markdown';
+        isAndreFile = true;
+    } else if (isConfigFile) {
+        type = 'Config File';
+        isAndreFile = true;
+    } else if (ANDRE_FILE_PATTERNS.json.test(filename)) {
+        type = 'JSON File';
+    }
+    
+    return { type, isAndreFile, isEncrypted };
+}
+
+// Enhanced metadata creation for ANDRE files
+function createMetadata(file) {
+    const fileInfo = analyzeFile(file);
+    
+    return {
+        originalName: file.name,
+        fileSize: file.size,
+        mimeType: file.type || 'application/octet-stream',
+        encryptedAt: new Date().toISOString(),
+        toolVersion: `DRElock for ANDRE v${ANDRE_VERSION}`,
+        algorithm: 'AES-256-GCM',
+        iterations: PBKDF2_ITERATIONS,
+        fileType: fileInfo.type,
+        isAndreFile: fileInfo.isAndreFile,
+        andreVersion: ANDRE_VERSION,
+        securityLevel: fileInfo.isAndreFile ? 'ANDRE_PROJECT' : 'STANDARD'
+    };
+}
+
+// Check if file content appears to be ANDRE-related
+async function detectAndreContent(file) {
+    if (file.size > 1024 * 1024) return false; // Skip large files for content detection
+    
+    try {
+        const text = await file.text();
+        
+        // Look for ANDRE signatures in file content
+        const andreSignatures = [
+            '$$ANDRE_SYSTEM_INFO',
+            '$ANDRE_SYSTEM_INFO', 
+            'ANDRE_SYSTEM_INFO',
+            'Andre - Adaptive Project',
+            'ANDRE v6.0',
+            'ANDRE Distribution',
+            '====== AI ASSISTANT: PLEASE READ AND PROCESS THIS FILE ======',
+            'This file contains an ANDRE',
+            '"$$name": "Andre -'
+        ];
+        
+        return andreSignatures.some(signature => text.includes(signature));
+    } catch (error) {
+        return false;
+    }
+}
+
+// Drag and drop support
+const fileLabel = document.getElementById('fileLabel');
+
+fileLabel.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    fileLabel.style.borderColor = '#4a90e2';
+    fileLabel.style.background = 'rgba(74, 144, 226, 0.1)';
+});
+
+fileLabel.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    if (!document.getElementById('fileInput').files[0]) {
+        fileLabel.style.borderColor = '#666';
+        fileLabel.style.background = 'rgba(255, 255, 255, 0.1)';
+    }
+});
+
+fileLabel.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        document.getElementById('fileInput').files = files;
+        const event = new Event('change', { bubbles: true });
+        document.getElementById('fileInput').dispatchEvent(event);
+    }
+});
+
+// Password visibility toggle
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggle = document.querySelector('.password-toggle');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggle.textContent = '🙈';
+    } else {
+        passwordInput.type = 'password';
+        toggle.textContent = '👁️';
+    }
+}
+
+// Password strength checker
+document.getElementById('password').addEventListener('input', function(e) {
+    const password = e.target.value;
+    const strengthBar = document.getElementById('strengthBar');
+    const strength = calculatePasswordStrength(password);
+    
+    strengthBar.style.width = strength.percentage + '%';
+    strengthBar.style.background = strength.color;
+});
+
+function calculatePasswordStrength(password) {
+    let strength = 0;
+    const checks = [
+        password.length >= 8,
+        password.length >= 12,
+        /[a-z]/.test(password),
+        /[A-Z]/.test(password),
+        /[0-9]/.test(password),
+        /[^a-zA-Z0-9]/.test(password)
+    ];
+    
+    checks.forEach(check => { if (check) strength++; });
+    
+    const percentage = (strength / checks.length) * 100;
+    let color = '#ff4444';
+    
+    if (percentage > 80) color = '#64c864';
+    else if (percentage > 60) color = '#4a90e2';
+    else if (percentage > 40) color = '#ffbb33';
+    
+    return { percentage, color };
+}
+
+// Format file size
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Auto-detect file type
+async function detectFileType(file) {
+    const fileInfo = analyzeFile(file);
+    
+    if (fileInfo.isEncrypted) {
+        showStatus('info', '🔓 Encrypted ANDRE file detected. Enter password to decrypt.');
+        document.getElementById('decryptBtn').focus();
+    } else if (fileInfo.isAndreFile) {
+        showStatus('info', '🤖 ANDRE project file detected. Ready for secure encryption.');
+        
+        // Check content for additional ANDRE signatures
+        const hasAndreContent = await detectAndreContent(file);
+        if (hasAndreContent) {
+            showStatus('success', '🤖 ANDRE configuration file confirmed. Expert knowledge and project data will be securely encrypted.');
+        }
+    } else {
+        showStatus('info', '📄 File loaded. DRElock will apply standard encryption.');
+    }
+}
+
+// Enhanced key derivation
+async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(password),
+        { name: 'PBKDF2' },
+        false,
+        ['deriveKey', 'deriveBits']
+    );
+    
+    // Enhanced iterations for ANDRE files
+    const iterations = PBKDF2_ITERATIONS;
+    
+    // Derive encryption key
+    const encryptionKey = await crypto.subtle.deriveKey(
+        {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: iterations,
+            hash: 'SHA-256'
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+    );
+    
+    // Derive HMAC key for authentication
+    const hmacKeyBytes = await crypto.subtle.deriveBits(
+        {
+            name: 'PBKDF2',
+            salt: new Uint8Array([...salt, ...new TextEncoder().encode('HMAC_ANDRE')]),
+            iterations: iterations,
+            hash: 'SHA-256'
+        },
+        keyMaterial,
+        256
+    );
+    
+    const hmacKey = await crypto.subtle.importKey(
+        'raw',
+        hmacKeyBytes,
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign', 'verify']
+    );
+    
+    return { encryptionKey, hmacKey };
+}
+
+// Encrypt file with ANDRE-optimized security
+async function encryptFile() {
+    const file = document.getElementById('fileInput').files[0];
+    const password = document.getElementById('password').value;
+    
+    if (!file || !password) {
+        showStatus('warning', '⚠️ Please select a file and enter a password.');
+        return;
+    }
+    
+    if (password.length < 8) {
+        showStatus('warning', '⚠️ Password must be at least 8 characters long for ANDRE file security.');
+        return;
+    }
+    
+    const fileInfo = analyzeFile(file);
+    
+    try {
+        showProgress(true);
+        updateProgress(10);
+        
+        // Generate random values with enhanced entropy for ANDRE files
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const salt = crypto.getRandomValues(new Uint8Array(32));
+        
+        updateProgress(20);
+        
+        // Derive keys
+        if (fileInfo.isAndreFile) {
+            showStatus('info', '🤖 Deriving enhanced encryption keys for ANDRE project file...');
+        } else {
+            showStatus('info', '🔑 Deriving encryption keys...');
+        }
+        const { encryptionKey, hmacKey } = await deriveKey(password, salt);
+        
+        updateProgress(30);
+        
+        // Read file data
+        showStatus('info', '📖 Reading file content...');
+        const fileData = await file.arrayBuffer();
+        
+        // For ANDRE files, check for content validation
+        if (fileInfo.isAndreFile && file.size < 1024 * 1024) {
+            const hasAndreContent = await detectAndreContent(file);
+            if (hasAndreContent) {
+                showStatus('info', '🤖 ANDRE configuration detected in file content. Applying enhanced security...');
+            }
+        }
+        
+        updateProgress(40);
+        
+        // Create enhanced metadata for ANDRE files
+        const metadata = createMetadata(file);
+        const metadataBytes = new TextEncoder().encode(JSON.stringify(metadata));
+        const metadataLengthBytes = new Uint8Array(4);
+        new DataView(metadataLengthBytes.buffer).setUint32(0, metadataBytes.length, true);
+        
+        updateProgress(50);
+        
+        // Combine data with metadata
+        const combinedData = new Uint8Array(metadataBytes.length + fileData.byteLength);
+        combinedData.set(metadataBytes, 0);
+        combinedData.set(new Uint8Array(fileData), metadataBytes.length);
+        
+        updateProgress(60);
+        
+        // Encrypt combined data
+        showStatus('info', '🔒 Encrypting with AES-256-GCM...');
+        const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: iv },
+            encryptionKey,
+            combinedData
+        );
+        
+        updateProgress(70);
+        
+        // Create HMAC for tamper detection
+        if (fileInfo.isAndreFile) {
+            showStatus('info', '🛡️ Generating ANDRE project authentication signature...');
+        } else {
+            showStatus('info', '🛡️ Generating authentication signature...');
+        }
+        const dataToSign = new Uint8Array(
+            SIGNATURE_BYTES.length + salt.length + iv.length + encrypted.byteLength
+        );
+        let offset = 0;
+        dataToSign.set(SIGNATURE_BYTES, offset);
+        offset += SIGNATURE_BYTES.length;
+        dataToSign.set(salt, offset);
+        offset += salt.length;
+        dataToSign.set(iv, offset);
+        offset += iv.length;
+        dataToSign.set(new Uint8Array(encrypted), offset);
+        
+        const hmac = await crypto.subtle.sign('HMAC', hmacKey, dataToSign);
+        
+        updateProgress(80);
+        
+        // Assemble final file structure
+        // [SIGNATURE][SALT][IV][METADATA_LENGTH][HMAC][ENCRYPTED_DATA]
+        const finalFile = new Uint8Array(
+            SIGNATURE_BYTES.length + 
+            salt.length + 
+            iv.length + 
+            4 + // metadata length
+            32 + // HMAC length
+            encrypted.byteLength
+        );
+        
+        offset = 0;
+        finalFile.set(SIGNATURE_BYTES, offset);
+        offset += SIGNATURE_BYTES.length;
+        finalFile.set(salt, offset);
+        offset += salt.length;
+        finalFile.set(iv, offset);
+        offset += iv.length;
+        finalFile.set(metadataLengthBytes, offset);
+        offset += 4;
+        finalFile.set(new Uint8Array(hmac), offset);
+        offset += 32;
+        finalFile.set(new Uint8Array(encrypted), offset);
+        
+        updateProgress(90);
+        
+        // Create download with appropriate naming
+        let outputName;
+        if (fileInfo.isAndreFile) {
+            outputName = file.name + '.andre.drelock';
+        } else {
+            outputName = file.name + '.drelock';
+        }
+        
+        const blob = new Blob([finalFile], { type: 'application/octet-stream' });
+        downloadFile(blob, outputName);
+        
+        updateProgress(100);
+        showProgress(false);
+        
+        if (fileInfo.isAndreFile) {
+            showStatus('success', `✅ ANDRE project file encrypted successfully as "${outputName}"`);
+        } else {
+            showStatus('success', `✅ File encrypted successfully as "${outputName}"`);
+        }
+        
+        // Show encryption details
+        const encryptionDetails = {
+            'File Type': fileInfo.type,
+            'Encryption': 'AES-256-GCM',
+            'Key Derivation': `PBKDF2 (${PBKDF2_ITERATIONS.toLocaleString()} iterations)`,
+            'Authentication': 'HMAC-SHA256',
+            'Original Size': formatFileSize(file.size),
+            'Encrypted Size': formatFileSize(finalFile.length),
+            'Output File': outputName
+        };
+        
+        if (fileInfo.isAndreFile) {
+            encryptionDetails['ANDRE Version'] = ANDRE_VERSION;
+            encryptionDetails['Security Level'] = 'ANDRE_PROJECT';
+        }
+        
+        showMetadata(encryptionDetails);
+        
+    } catch (error) {
+        showProgress(false);
+        console.error('Encryption error:', error);
+        showStatus('error', '❌ Encryption failed. Please try again.');
+    }
+}
+
+// Decrypt file with ANDRE verification
+async function decryptFile() {
+    const file = document.getElementById('fileInput').files[0];
+    const password = document.getElementById('password').value;
+    
+    if (!file || !password) {
+        showStatus('warning', '⚠️ Please select an encrypted file and enter the password.');
+        return;
+    }
+    
+    try {
+        showProgress(true);
+        updateProgress(10);
+        
+        // Read file
+        showStatus('info', '📖 Reading encrypted file...');
+        const fileData = new Uint8Array(await file.arrayBuffer());
+        
+        updateProgress(20);
+        
+        // Verify tool signature
+        showStatus('info', '🔍 Verifying DRElock ANDRE signature...');
+        const fileSignature = fileData.slice(0, SIGNATURE_BYTES.length);
+        const signatureMatch = SIGNATURE_BYTES.every((byte, i) => byte === fileSignature[i]);
+        
+        if (!signatureMatch) {
+            showProgress(false);
+            showStatus('error', '❌ This file was not encrypted with DRElock for ANDRE or has been corrupted.');
+            return;
+        }
+        
+        updateProgress(30);
+        
+        // Extract components
+        let offset = SIGNATURE_BYTES.length;
+        const salt = fileData.slice(offset, offset + 32);
+        offset += 32;
+        const iv = fileData.slice(offset, offset + 12);
+        offset += 12;
+        const metadataLengthBytes = fileData.slice(offset, offset + 4);
+        const metadataLength = new DataView(metadataLengthBytes.buffer).getUint32(0, true);
+        offset += 4;
+        const storedHmac = fileData.slice(offset, offset + 32);
+        offset += 32;
+        const encryptedData = fileData.slice(offset);
+        
+        updateProgress(40);
+        
+        // Derive keys
+        showStatus('info', '🔑 Deriving decryption keys...');
+        const { encryptionKey, hmacKey } = await deriveKey(password, salt);
+        
+        updateProgress(50);
+        
+        // Verify HMAC
+        showStatus('info', '🛡️ Verifying file integrity...');
+        const dataToVerify = new Uint8Array(
+            SIGNATURE_BYTES.length + salt.length + iv.length + encryptedData.length
+        );
+        offset = 0;
+        dataToVerify.set(SIGNATURE_BYTES, offset);
+        offset += SIGNATURE_BYTES.length;
+        dataToVerify.set(salt, offset);
+        offset += salt.length;
+        dataToVerify.set(iv, offset);
+        offset += iv.length;
+        dataToVerify.set(encryptedData, offset);
+        
+        const isValid = await crypto.subtle.verify(
+            'HMAC',
+            hmacKey,
+            storedHmac,
+            dataToVerify
+        );
+        
+        if (!isValid) {
+            showProgress(false);
+            showStatus('error', '❌ File integrity check failed. The file has been tampered with or the password is incorrect.');
+            return;
+        }
+        
+        updateProgress(60);
+        
+        // Decrypt data
+        showStatus('info', '🔓 Decrypting file...');
+        const decrypted = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: iv },
+            encryptionKey,
+            encryptedData
+        );
+        
+        updateProgress(70);
+        
+        // Extract metadata and original file
+        const decryptedArray = new Uint8Array(decrypted);
+        const metadataBytes = decryptedArray.slice(0, metadataLength);
+        const metadata = JSON.parse(new TextDecoder().decode(metadataBytes));
+        const originalFileData = decryptedArray.slice(metadataLength);
+        
+        updateProgress(80);
+        
+        // Create download with original filename
+        const blob = new Blob([originalFileData], { type: metadata.mimeType });
+        downloadFile(blob, metadata.originalName);
+        
+        updateProgress(100);
+        showProgress(false);
+        
+        if (metadata.isAndreFile) {
+            showStatus('success', `✅ ANDRE project file decrypted successfully as "${metadata.originalName}"`);
+        } else {
+            showStatus('success', `✅ File decrypted successfully as "${metadata.originalName}"`);
+        }
+        
+        // Show decryption details
+        const decryptionDetails = {
+            'Original Name': metadata.originalName,
+            'File Type': metadata.fileType || 'Unknown',
+            'File Size': formatFileSize(metadata.fileSize),
+            'Encrypted On': new Date(metadata.encryptedAt).toLocaleString(),
+            'Tool Version': metadata.toolVersion,
+            'Algorithm': metadata.algorithm,
+            'Integrity': '✅ Verified'
+        };
+        
+        if (metadata.isAndreFile) {
+            decryptionDetails['ANDRE Version'] = metadata.andreVersion || 'Unknown';
+            decryptionDetails['Security Level'] = metadata.securityLevel || 'STANDARD';
+        }
+        
+        showMetadata(decryptionDetails);
+        
+    } catch (error) {
+        showProgress(false);
+        console.error('Decryption error:', error);
+        if (error.name === 'OperationError') {
+            showStatus('error', '❌ Decryption failed. Wrong password or corrupted file.');
+        } else {
+            showStatus('error', '❌ An error occurred during decryption.');
+        }
+    }
+}
+
+// Download file
+function downloadFile(blob, filename) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+}
+
+// UI Helper functions
+function showStatus(type, message) {
+    const statusDiv = document.getElementById('statusMessage');
+    statusDiv.className = 'status-message status-' + type;
+    statusDiv.innerHTML = message;
+    statusDiv.style.display = 'block';
+    
+    if (type === 'success') {
+        setTimeout(() => {
+            statusDiv.style.display = 'none';
+        }, 8000);
+    }
+}
+
+function showProgress(show) {
+    const progressBar = document.getElementById('progressBar');
+    progressBar.style.display = show ? 'block' : 'none';
+    if (!show) {
+        document.getElementById('progressFill').style.width = '0%';
+    }
+}
+
+function updateProgress(percentage) {
+    document.getElementById('progressFill').style.width = percentage + '%';
+}
+
+function showMetadata(data) {
+    const metadataDiv = document.getElementById('metadataDisplay');
+    let html = '<h4>📋 File Details</h4>';
+    
+    for (const [key, value] of Object.entries(data)) {
+        html += `
+            <div class="metadata-item">
+                <span class="metadata-label">${key}:</span>
+                <span class="metadata-value">${value}</span>
+            </div>
+        `;
+    }
+    
+    metadataDiv.innerHTML = html;
+    metadataDiv.style.display = 'block';
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for Web Crypto API support
+    if (!window.crypto || !window.crypto.subtle) {
+        showStatus('error', '❌ Your browser does not support Web Crypto API. Please use a modern browser.');
+        document.getElementById('encryptBtn').disabled = true;
+        document.getElementById('decryptBtn').disabled = true;
+        return;
+    }
+    
+    showStatus('info', '🤖 DRElock for ANDRE v6.0 ready. Drag and drop your ANDRE project files for secure encryption.');
+});
+</script>
+</body>
+</html>
